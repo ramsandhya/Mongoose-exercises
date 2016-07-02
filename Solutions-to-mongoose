@@ -1,0 +1,173 @@
+## Basic Schema
+
+1.
+var mongoose = require('mongoose');
+// the connect method is not used here as we are not making connection to the database. This module is going to be required in future.
+// mongoose.connect('mongodb://localhost/firstdatabase');
+// maps to the students collection in the database
+var Student = mongoose.model('Student', {
+  name: String,
+  links: {
+    website: String,
+    github: String
+  },
+  gender: String,
+  projects: [String],
+  points: Number
+});
+module.exports = Student
+
+2.
+var mongoose = require('mongoose');
+mongoose.connect('mongodb://localhost/firstdatabase');
+
+var Jazz = mongoose.model('Album', {
+  name: String,
+  artist: String,
+  released: Number,
+  duration: Number,
+  styles: [String]
+});
+module.exports = Jazz
+
+3.
+var mongoose = require('mongoose');
+mongoose.connect('mongodb://localhost/population');
+var Zipcode = mongoose.model("Zipcode", {
+// id has to be _id
+    _id : String,
+    city : String,
+    location : [
+      {
+        lat: Number,
+        long: Number
+      }
+    ],
+    pop : Number,
+    state : String
+});
+module.exports = Zipcode
+
+## Basic CRUD (Create, Retrieve, Update, Delete)
+1.
+var mongoose = require('mongoose');
+mongoose.connect('mongodb://localhost/firstdatabase');
+
+var Student = mongoose.model('Student', {
+  name: String,
+  links: {
+    website: String,
+    github: String
+  },
+  gender: String,
+  points: Number,
+  projects: [String],
+  points: Number
+});
+
+var matt = new Student({
+  name: 'Matt',
+  links: {
+    website: 'https://github.com/mbrimmer83/matthewbrimmerwebsite',
+    github: 'https://github.com/mbrimmer83'
+  },
+  gender: 'male',
+  points: 12,
+  projects: [
+    'Sportakus',
+    'Draw Together',
+    'Tic Tac Toe',
+    'Movie App',
+    'Black Jack'
+  ],
+});
+
+matt.save(function(err) {
+  if (err) {
+    console.error(err.message);
+    return;
+  }
+  console.log('Saved matt!', matt);
+  process.exit();
+});
+
+2.
+var mongoose = require('mongoose');
+mongoose.connect('mongodb://localhost/firstdatabase');
+var Student = require('./student');
+
+Student.find(function(err, studentList){
+  if (err) {
+    console.error(err.message);
+    return;
+  }
+  console.log("Students: ", studentList);
+});
+
+3.
+var mongoose = require('mongoose');
+mongoose.connect('mongodb://localhost/firstdatabase');
+var Student = require('./student');
+
+Student.findOne({name:"DeeAnn"}, function(err, deeAnn){
+  if (err) {
+    console.error(err.message);
+    return;
+  }
+  console.log("Student searched with name as a parameter i.e.: ", deeAnn);
+});
+
+4.
+var mongoose = require('mongoose');
+mongoose.connect('mongodb://localhost/firstdatabase');
+var Student = require('./student');
+
+Student.update(
+  {name:"DeeAnn"},
+  {$set: {points: 15}},
+  function(err, status){
+  if (err) {
+    console.error(err.message);
+    return;
+  }
+  console.log("Student's pointvalue is': ", status);
+});
+
+5.
+var mongoose = require('mongoose');
+mongoose.connect('mongodb://localhost/firstdatabase');
+var Student = require('./student');
+var ID = "57772e9ff62600f0d23cbad8";
+Student.remove(
+  {_id: ID},
+  function(err, status){
+  if (err) {
+    console.error(err.message);
+    return;
+  }
+  console.log("Status: ", status);
+});
+
+6.
+var mongoose = require('mongoose');
+mongoose.connect('mongodb://localhost/firstdatabase');
+var Student = require('./student');
+
+Student.findOne(
+  {name: DeeAnn},
+  function(err, status){
+  if (err) {
+    console.error(err.message);
+    return;
+  }
+  deeAnn.points++;
+  deeAnn.save(function(err, result){
+    if (err) {
+      console.error(err.message);
+      return;
+    }
+    console.log("Status: ", result);
+  });
+});
+
+Validation & Aggregation- to be continued..
